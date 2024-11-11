@@ -24,14 +24,14 @@ public class Main {
 
         if (option == 1) {
             System.out.println("Digite o caminho completo para o arquivo a ser criptografado:");
-            String inputPath = "C:\\Users\\User\\Documents\\TesteCriptografia.txt";// scanner.nextLine();
+            String inputPath = scanner.nextLine();
             File fileToEncrypt = new File(inputPath);
 
             System.out.println("Digite a chave (bytes separados por ','):");
-            String password = "20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248"; // scanner.nextLine();
+            String password = scanner.nextLine();
 
             System.out.println("Digite o caminho completo de saída para o arquivo criptografado:");
-            String outputPath = "C:\\Users\\User\\Documents\\TesteCriptografiaFeita.txt";//scanner.nextLine();
+            String outputPath = scanner.nextLine();
             File outputFile = new File(outputPath);
 
             byte[] bytes;
@@ -56,14 +56,14 @@ public class Main {
 
         } else if (option == 2) {
             System.out.println("Digite o caminho completo para o arquivo a ser descriptografado:");
-            String inputPath = "C:\\Users\\User\\Documents\\TesteCriptografiaFeita.txt";//scanner.nextLine();
+            String inputPath = scanner.nextLine();
             File fileToDecrypt = new File(inputPath);
 
             System.out.println("Digite a chave (bytes separados por ','):");
-            String password = "20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248";// scanner.nextLine();
+            String password = scanner.nextLine();
 
             System.out.println("Digite o caminho completo de saída para o arquivo descriptografado:");
-            String outputPath = "C:\\Users\\User\\Documents\\TesteDescriptografiaFeita.txt";//scanner.nextLine();
+            String outputPath = scanner.nextLine();
             File outputFile = new File(outputPath);
 
             byte[] bytes;
