@@ -11,7 +11,7 @@ public class MatrizEstado {
 
     private MatrizEstado(int[] text) {
         if (text.length != 16) {
-            throw new IllegalArgumentException("Chaves devem ter 128 bits");
+            throw new IllegalArgumentException("As chaves precisam conter 128 bits");
         }
 
         int index = 0;
@@ -36,29 +36,29 @@ public class MatrizEstado {
         }
     }
 
-    public static MatrizEstado deChave(String password) {
-        return new MatrizEstado(Arrays.stream(password.split(",")).mapToInt(Integer::parseInt).toArray());
+    public static MatrizEstado deChave(String senha) {
+        return new MatrizEstado(Arrays.stream(senha.split(",")).mapToInt(Integer::parseInt).toArray());
     }
 
     public static MatrizEstado deChave(int[] array) {
         return new MatrizEstado(array);
     }
 
-    public static List<MatrizEstado> deTextoSimples(int[] simpleText) {
-        List<MatrizEstado> result = new ArrayList<>();
+    public static List<MatrizEstado> deTextoSimples(int[] textoSimples) {
+        List<MatrizEstado> resultado = new ArrayList<>();
 
-        for (int i = 0; i < simpleText.length; i += 16) {
-            result.add(new MatrizEstado(Arrays.copyOfRange(simpleText, i, i + 16)));
+        for (int i = 0; i < textoSimples.length; i += 16) {
+            resultado.add(new MatrizEstado(Arrays.copyOfRange(textoSimples, i, i + 16)));
         }
 
-        return result;
+        return resultado;
     }
 
     public static MatrizEstado deRoundKeys(int[] w0, int[] w1, int[] w2, int[] w3) {
         return new MatrizEstado(w0, w1, w2, w3);
     }
 
-    private static int[] rotateRow(int[] row, int index) {
+    private static int[] rotRow(int[] row, int index) {
         for (int i = 0; i < index; i++) {
             row = ExpansaoChave.rotWord(row);
         }
@@ -76,7 +76,7 @@ public class MatrizEstado {
     }
 
     public MatrizEstado shiftRows() {
-        IntStream.range(0, 4).forEach(i -> words[i] = rotateRow(words[i], i));
+        IntStream.range(0, 4).forEach(i -> words[i] = rotRow(words[i], i));
         return this;
     }
 
@@ -109,29 +109,29 @@ public class MatrizEstado {
         return IntStream.range(0, 4).mapToObj(i -> IntStream.range(0, 4).map(j -> words[j][i]).toArray()).collect(Collectors.toList());
     }
 
-    public int[] toIntArray() {
+    public int[] converteArrayParaInt() {
         return getPalavras().stream().flatMapToInt(Arrays::stream).toArray();
     }
 
-    private String formatHex(String hex) {
+    private String hexadecimal(String hex) {
         return (hex.length() == 1 ? "0x0" : "0x").concat(hex);
     }
 
     @Override
     public String toString() {
-        StringBuilder[] lines = new StringBuilder[4];
-        IntStream.range(0, 4).forEach(i -> lines[i] = new StringBuilder());
+        StringBuilder[] linhas = new StringBuilder[4];
+        IntStream.range(0, 4).forEach(i -> linhas[i] = new StringBuilder());
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                lines[j].append(formatHex(Integer.toHexString(words[j][i]))).append(" | ");
+                linhas[j].append(hexadecimal(Integer.toHexString(words[j][i]))).append(" | ");
             }
         }
 
-        return String.join("\n", lines);
+        return String.join("\n", linhas);
     }
 
-    public MatrizEstado invSubBytes() {
+    public MatrizEstado inverteSubBytes() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 words[i][j] = Tabelas.pegarValorTabelaS_inv(words[i][j]);
@@ -140,14 +140,14 @@ public class MatrizEstado {
         return this;
     }
 
-    public MatrizEstado invShiftRows() {
+    public MatrizEstado inverteShiftRows() {
         for (int i = 0; i < 4; i++) {
-            words[i] = rotateRow(words[i], 4 - i);
+            words[i] = rotRow(words[i], 4 - i);
         }
         return this;
     }
 
-    public MatrizEstado invMixColumns() {
+    public MatrizEstado inverteMixColumns() {
         List<int[]> wordsList = getPalavras();
         int[][] invMixColumnsMatrix = {
             {0x0e, 0x0b, 0x0d, 0x09},
@@ -175,12 +175,12 @@ public class MatrizEstado {
         return result;
     }
 
-    private static int calcularValorGalois(int valueOne, int valueTwo) {
-        if (valueOne == 0 || valueTwo == 0) return 0;
-        if (valueOne == 1) return valueTwo;
-        if (valueTwo == 1) return valueOne;
+    private static int calcularValorGalois(int valor1, int valor2) {
+        if (valor1 == 0 || valor2 == 0) return 0;
+        if (valor1 == 1) return valor2;
+        if (valor2 == 1) return valor1;
 
-        int TabelaLResult = Tabelas.pegarValorTabelaL(valueOne) + Tabelas.pegarValorTabelaL(valueTwo);
+        int TabelaLResult = Tabelas.pegarValorTabelaL(valor1) + Tabelas.pegarValorTabelaL(valor2);
 
         if (TabelaLResult > 0xFF) TabelaLResult -= 0xFF;
 

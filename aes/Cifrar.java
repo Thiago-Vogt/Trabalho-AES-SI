@@ -7,15 +7,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 
-public class BlockCipher {
+public class Cifrar {
 
-    public static int[] encriptarTexto(int[] simpleText, String key) {
-        List<MatrizEstado> roundKeys = expandirChaves(MatrizEstado.deChave(key));
-        List<MatrizEstado> textBlocks = MatrizEstado.deTextoSimples(simpleText);
-        return encriptar(roundKeys, textBlocks);
-    }
-
-    private static int[] encriptar(List<MatrizEstado> roundKeys, List<MatrizEstado> textBlocks) {
+    private static int[] criptografar(List<MatrizEstado> roundKeys, List<MatrizEstado> textBlocks) {
         Stream<MatrizEstado> blockStream = textBlocks.stream().map(b -> b.addRoundKey(roundKeys.get(0)));
 
         for (int i = 1; i < 10; i++) {
@@ -31,17 +25,23 @@ public class BlockCipher {
                 .map(MatrizEstado::subBytes)
                 .map(MatrizEstado::shiftRows)
                 .map(b -> b.addRoundKey(roundKeys.get(10)))
-                .map(MatrizEstado::toIntArray)
+                .map(MatrizEstado::converteArrayParaInt)
                 .flatMapToInt(Arrays::stream).toArray();
     }
 
-     public static List<MatrizEstado> expandirChaves(MatrizEstado initialMatrix) {
+    public static int[] criptografarTexto(int[] textoSimples, String chave) {
+        List<MatrizEstado> roundKeys = gerarChavesExpandidas(MatrizEstado.deChave(chave));
+        List<MatrizEstado> textBlocks = MatrizEstado.deTextoSimples(textoSimples);
+        return criptografar(roundKeys, textBlocks);
+    }
+
+     public static List<MatrizEstado> gerarChavesExpandidas(MatrizEstado matrizInicial) {
         List<MatrizEstado> roundKeys = new ArrayList<>();
-        roundKeys.add(initialMatrix);
+        roundKeys.add(matrizInicial);
 
         for (int i = 1; i < 11; i++) {
-            MatrizEstado previousMatrix = roundKeys.get(i - 1);
-            List<int[]> words = previousMatrix.getPalavras();
+            MatrizEstado matrizAnterior = roundKeys.get(i - 1);
+            List<int[]> words = matrizAnterior.getPalavras();
 
             int[] firstKey = expandirPrimeiraChave(words, i);
             int[] secondKey = ExpansaoChave.aplicarXor(firstKey, words.get(1));
@@ -54,13 +54,13 @@ public class BlockCipher {
         return roundKeys;
     }
 
-    private static int[] expandirPrimeiraChave(List<int[]> previousMatrixWords, int index) {
-        return Optional.of(previousMatrixWords.get(3))                            
+    private static int[] expandirPrimeiraChave(List<int[]> MatrizAnteriorWords, int index) {
+        return Optional.of(MatrizAnteriorWords.get(3))                            
                 .map(ExpansaoChave::rotWord)                                          
                 .map(ExpansaoChave::subWord)                                       
                 .map(w -> ExpansaoChave.aplicarXor(w, ExpansaoChave.roundConstant(index)))      
-                .map(w -> ExpansaoChave.aplicarXor(w, previousMatrixWords.get(0)))          
-                .orElseThrow(() -> new RuntimeException("Error when trying to expand the first key of the block"));
+                .map(w -> ExpansaoChave.aplicarXor(w, MatrizAnteriorWords.get(0)))          
+                .orElseThrow(() -> new RuntimeException("Erro ao tentar expandir a primeira chave do bloco"));
     }
 
 }

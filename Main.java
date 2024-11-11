@@ -1,11 +1,10 @@
-import aes.BlockCipher;
+import aes.Cifrar;
 import aes.Decifrar;
 import aes.ExpansaoChave;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -94,7 +93,7 @@ public class Main {
 
     public static int[] encriptar(int[] textoSimples, String key) {
         int[] pkcsText = ExpansaoChave.pkcs7(textoSimples, 16);
-        return BlockCipher.encriptarTexto(pkcsText, key);
+        return Cifrar.criptografarTexto(pkcsText, key);
     }
 
     public static int[] decifrar(int[] textoCifrado, String key) {
