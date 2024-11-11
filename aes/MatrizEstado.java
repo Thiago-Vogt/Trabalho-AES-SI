@@ -1,5 +1,4 @@
 package aes;
-import aes.tables.Tabelas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,7 @@ public class MatrizEstado {
 
     private MatrizEstado(int[] text) {
         if (text.length != 16) {
-            throw new IllegalArgumentException("Chaves devem ter 128bits");
+            throw new IllegalArgumentException("Chaves devem ter 128 bits");
         }
 
         int index = 0;

@@ -5,37 +5,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import aes.tables.Tabelas;
-
 public class ExpansaoChave {
     public static int[] rotWord(int[] array) {
         return new int[]{array[1], array[2], array[3], array[0]};
     }
 
-        public static int[] subWord(int[] words) {
-        return Arrays.stream(words)
-                     .map(word -> {
-                         int valorSubstituido = Tabelas.PegarValorTabelaSbox(word);
-                         return valorSubstituido != -1 ? valorSubstituido : word;
-                     })
-                     .toArray();
+    public static int[] subWord(int[] words) {
+    	return Arrays.stream(words)
+                 .map(word -> {
+                     int valorSubstituido = Tabelas.PegarValorTabelaSbox(word);
+                     return valorSubstituido != -1 ? valorSubstituido : word;
+                 })
+                 .toArray();
     }
-
-    // public static int[] subWord(int[] words) {
-    //     return Arrays.stream(words).map(Tabelas::PegarValorTabelaSbox).toArray();
-    // }
     
-        private static final Map<Integer, Integer> VALORES = Map.of(
-            1, 0x01,
-            2, 0x02,
-            3, 0x04,
-            4, 0x08,
-            5, 0x10,
-            6, 0x20,
-            7, 0x40,
-            8, 0x80,
-            9, 0x1B,
-            10, 0x36
+    private static final Map<Integer, Integer> VALORES = Map.of(
+        1, 0x01,
+        2, 0x02,
+        3, 0x04,
+        4, 0x08,
+        5, 0x10,
+        6, 0x20,
+        7, 0x40,
+        8, 0x80,
+        9, 0x1B,
+        10, 0x36
     );
 
     public static int[] roundConstant(int index) {
@@ -61,7 +55,8 @@ public class ExpansaoChave {
 
         System.arraycopy(simpleText, 0, result, 0, textLength);
 
-        for (int i = 0; i < qdtCharAppend; i++) result[i + textLength] = qdtCharAppend;
+        for (int i = 0; i < qdtCharAppend; i++)
+        	result[i + textLength] = qdtCharAppend;
 
         return result;
     }

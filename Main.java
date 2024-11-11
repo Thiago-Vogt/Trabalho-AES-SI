@@ -20,21 +20,18 @@ public class Main {
         System.out.println("1: Criptografar um arquivo");
         System.out.println("2: Descriptografar um arquivo");
         int option = scanner.nextInt();
-        scanner.nextLine(); // Consumir a nova linha
+        scanner.nextLine();
 
         if (option == 1) {
-            // Criptografar
             System.out.println("Digite o caminho completo para o arquivo a ser criptografado:");
-            String inputPath = scanner.nextLine();
+            String inputPath = "C:\\Users\\User\\Documents\\TesteCriptografia.txt";// scanner.nextLine();
             File fileToEncrypt = new File(inputPath);
 
-            // pegar chave de cripto
             System.out.println("Digite a chave (bytes separados por ','):");
-            String password = scanner.nextLine();
+            String password = "20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248"; // scanner.nextLine();
 
-            // pegar diretório de saída
             System.out.println("Digite o caminho completo de saída para o arquivo criptografado:");
-            String outputPath = scanner.nextLine();
+            String outputPath = "C:\\Users\\User\\Documents\\TesteCriptografiaFeita.txt";//scanner.nextLine();
             File outputFile = new File(outputPath);
 
             byte[] bytes;
@@ -58,18 +55,15 @@ public class Main {
             System.out.println("Arquivo criptografado com sucesso!");
 
         } else if (option == 2) {
-            // Descriptografar
             System.out.println("Digite o caminho completo para o arquivo a ser descriptografado:");
-            String inputPath = scanner.nextLine();
+            String inputPath = "C:\\Users\\User\\Documents\\TesteCriptografiaFeita.txt";//scanner.nextLine();
             File fileToDecrypt = new File(inputPath);
 
-            // pegar chave de cripto
             System.out.println("Digite a chave (bytes separados por ','):");
-            String password = scanner.nextLine();
+            String password = "20,1,94,33,199,0,48,9,31,94,112,40,59,30,100,248";// scanner.nextLine();
 
-            // pegar diretório de saída
             System.out.println("Digite o caminho completo de saída para o arquivo descriptografado:");
-            String outputPath = scanner.nextLine();
+            String outputPath = "C:\\Users\\User\\Documents\\TesteDescriptografiaFeita.txt";//scanner.nextLine();
             File outputFile = new File(outputPath);
 
             byte[] bytes;
@@ -106,11 +100,9 @@ public class Main {
     public static int[] decifrar(int[] textoCifrado, String key) {
         return Decifrar.decifrarTexto(textoCifrado, key);
     }
-    
-    
 
     static int[] byteToIntArray(byte[] array) {
-        return IntStream.range(0, array.length).map(i -> array[i]).toArray();
+        return IntStream.range(0, array.length).map(i -> array[i] & 0xFF).toArray(); //  & 0xFF
     }
 
 
